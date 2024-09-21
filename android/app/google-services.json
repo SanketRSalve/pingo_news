@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "563098071357",
+    "project_id": "pingo-news-79309",
+    "storage_bucket": "pingo-news-79309.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563098071357:android:d3999ca7dfb5ef0136d554",
+        "android_client_info": {
+          "package_name": "com.example.lingo_news"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRoEIecpPZeW2B5aJqJOwdt9FH4VMMC8w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
