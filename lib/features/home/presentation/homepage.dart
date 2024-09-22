@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_news/app_sizes.dart';
 import 'package:lingo_news/core/theme/colors.dart';
+import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
+import 'package:lingo_news/features/newsfeed/models/article.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final newsProvider = Provider.of<NewsfeedProvider>(context);
+    newsProvider.fetchHeadlines();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: AppColors.primaryBlue,
@@ -42,8 +47,9 @@ class HomePage extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: 3,
+                itemCount: newsProvider.headlines.length,
                 itemBuilder: (context, index) {
+                  Article article = newsProvider.headlines[index];
                   return Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: 12.0, horizontal: 6.0),
@@ -55,18 +61,18 @@ class HomePage extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Flexible(
+                        Flexible(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("News Source"),
+                              Text(article.title),
                               Text(
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                                article.description ?? "No Description",
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              Text("10 min ago"),
+                              Text(article.publishedAt.toString()),
                             ],
                           ),
                         ),
@@ -75,9 +81,12 @@ class HomePage extends StatelessWidget {
                           height: MediaQuery.of(context).size.width * 0.3,
                           width: MediaQuery.of(context).size.width * 0.3,
                           decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      article.urlToImage.toString()),
+                                  fit: BoxFit.cover)),
                         )
                       ],
                     ),

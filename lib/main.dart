@@ -6,6 +6,9 @@ import 'package:lingo_news/features/authentication/controller/auth_provider.dart
 import 'package:lingo_news/features/authentication/presentation/widgets/login_widget.dart';
 import 'package:lingo_news/features/authentication/presentation/widgets/signup_widget.dart';
 import 'package:lingo_news/features/home/presentation/homepage.dart';
+import 'package:lingo_news/features/newsfeed/api/newsfeed_api.dart';
+import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
+import 'package:lingo_news/features/newsfeed/service/newsfeed_service.dart';
 import 'package:lingo_news/firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -22,8 +25,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
+    final dioClient = DioClient();
+    final newsfeedRepository = NewsfeedRepository(dioClient);
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(
+            create: (_) => NewsfeedProvider(newsfeedRepository))
+      ],
       child: MaterialApp.router(
         //Default Theme : Light
         routerConfig: _router,
