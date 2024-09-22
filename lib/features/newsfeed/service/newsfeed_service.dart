@@ -14,10 +14,9 @@ class NewsfeedRepository {
     final dio = _dioClient.dio;
 
     try {
-      // Response response = await dio.get('/top-headlines', queryParameters: {
-      //   'country': countryCode,
-      // });
-      Response response = await Dio().get('http://127.0.0.1:5500/test.json');
+      Response response = await dio.get('/top-headlines', queryParameters: {
+        'country': countryCode,
+      });
       if (response.statusCode == 200) {
         List<dynamic> articlesjson = response.data['articles'];
         List<Article> articles =

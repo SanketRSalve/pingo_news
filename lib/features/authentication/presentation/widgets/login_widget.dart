@@ -4,6 +4,7 @@ import 'package:lingo_news/core/theme/colors.dart';
 import 'package:lingo_news/core/utils/form_validators.dart';
 import 'package:lingo_news/features/authentication/controller/auth_provider.dart';
 import 'package:lingo_news/core/widgets/custom_text_form_field.dart';
+import 'package:lingo_news/features/authentication/presentation/widgets/primary_button.dart';
 import 'package:provider/provider.dart';
 
 class LoginWidget extends StatefulWidget {
@@ -72,6 +73,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                         textController: _passwordController,
                         hintText: "Password",
                         validator: FormValidators.validatePassword,
+                        isPassword: true,
                       ),
                     ],
                   ),
@@ -82,35 +84,24 @@ class _LoginWidgetState extends State<LoginWidget> {
 
               Column(
                 children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.56,
-                    height: 48.0,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        backgroundColor: AppColors.primaryBlue,
-                      ),
-                      onPressed: () {
-                        debugPrint("Signup");
-                        debugPrint(_emailController.text);
-                        if (formKey.currentState!.validate()) {
-                          context.read<AuthProvider>().loginUser(
-                              _emailController.text, _passwordController.text);
-                        }
-                      },
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "Poppins",
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                  Consumer<AuthProvider>(
+                      builder: (context, authProvider, child) {
+                    return authProvider.state.isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          )
+                        : PrimaryButton(
+                            label: "Login",
+                            onPressed: authProvider.state.isLoading
+                                ? null
+                                : () {
+                                    if (formKey.currentState!.validate()) {
+                                      context.read<AuthProvider>().loginUser(
+                                          _emailController.text,
+                                          _passwordController.text);
+                                    }
+                                  });
+                  }),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

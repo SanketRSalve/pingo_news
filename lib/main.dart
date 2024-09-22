@@ -4,7 +4,7 @@ import 'package:lingo_news/core/routing/app_router.dart';
 import 'package:lingo_news/core/theme/app_theme.dart';
 import 'package:lingo_news/features/authentication/controller/auth_provider.dart';
 import 'package:lingo_news/features/authentication/service/auth_service.dart';
-import 'package:lingo_news/features/firebase_remote_service/firebase_remote_service.dart';
+import 'package:lingo_news/core/firebase_remote_service/firebase_remote_service.dart';
 import 'package:lingo_news/features/newsfeed/api/newsfeed_api.dart';
 import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
 import 'package:lingo_news/features/newsfeed/service/newsfeed_service.dart';

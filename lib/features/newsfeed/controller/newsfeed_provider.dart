@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_news/core/utils/result_exception.dart';
-import 'package:lingo_news/features/firebase_remote_service/firebase_remote_service.dart';
+import 'package:lingo_news/core/firebase_remote_service/firebase_remote_service.dart';
 import 'package:lingo_news/features/newsfeed/models/article.dart';
 import 'package:lingo_news/features/newsfeed/models/newsfeed_state.dart';
 import 'package:lingo_news/features/newsfeed/service/newsfeed_service.dart';

@@ -18,7 +18,7 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      _authService.user.listen((user) {
+      _authService.user.first.then((user) {
         _state = _state.copyWith(user: user, isLoading: false);
       });
     } catch (e) {
@@ -32,51 +32,74 @@ class AuthProvider with ChangeNotifier {
   Future<bool> loginUser(String email, String password) async {
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
-
-    final result =
-        await _authService.signInWithEmailAndPassword(email, password);
-    if (result is Success<UserModel, Exception>) {
-      _state = _state.copyWith(user: result.value, isLoading: false);
+    try {
+      final result =
+          await _authService.signInWithEmailAndPassword(email, password);
+      if (result is Success<UserModel, Exception>) {
+        _state = _state.copyWith(user: result.value, isLoading: false);
+      } else if (result is Failure<UserModel, Exception>) {
+        _state = _state.copyWith(
+          errorMessage: result.exception.toString(),
+          isLoading: false,
+        );
+      }
       notifyListeners();
-      return true;
-    } else if (result is Failure<UserModel, Exception>) {
+      return result is Success;
+    } catch (e) {
       _state = _state.copyWith(
-          errorMessage: result.exception.toString(), isLoading: false);
+        errorMessage: e.toString(),
+        isLoading: false,
+      );
       notifyListeners();
       return false;
     }
-    return false;
   }
 
   Future<bool> registerUser(String name, String email, String password) async {
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
-
-    final result =
-        await _authService.registerWithEmailAndPassword(name, email, password);
-    if (result is Success<UserModel, Exception>) {
-      _state = _state.copyWith(user: result.value, isLoading: false);
+    try {
+      final result = await _authService.registerWithEmailAndPassword(
+          name, email, password);
+      if (result is Success<UserModel, Exception>) {
+        _state = _state.copyWith(user: result.value, isLoading: false);
+      } else if (result is Failure<UserModel, Exception>) {
+        _state = _state.copyWith(
+          errorMessage: result.exception.toString(),
+          isLoading: false,
+        );
+      }
       notifyListeners();
-      return true;
-    } else if (result is Failure<UserModel, Exception>) {
+      return result is Success;
+    } catch (e) {
       _state = _state.copyWith(
-          errorMessage: result.exception.toString(), isLoading: false);
+        errorMessage: e.toString(),
+        isLoading: false,
+      );
       notifyListeners();
       return false;
     }
-    return false;
   }
 
   Future<void> signOut() async {
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
-    final result = await _authService.signOut();
-    if (result is Success<void, Exception>) {
-      _state = _state.copyWith(user: null, isLoading: false);
-      notifyListeners();
-    } else if (result is Failure<void, Exception>) {
+    try {
+      final result = await _authService.signOut();
+      if (result is Success<void, Exception>) {
+        _state = _state.copyWith(user: null, isLoading: false);
+      } else if (result is Failure<void, Exception>) {
+        _state = _state.copyWith(
+          errorMessage: result.exception.toString(),
+          isLoading: false,
+        );
+      }
+    } catch (e) {
       _state = _state.copyWith(
-          errorMessage: result.exception.toString(), isLoading: false);
+        errorMessage: e.toString(),
+        isLoading: false,
+      );
+    } finally {
       notifyListeners();
     }
   }
