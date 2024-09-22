@@ -52,19 +52,19 @@ class HomePage extends StatelessWidget {
             ),
 
             //Can Add Logout button if asked
-            // TextButton(
-            //     onPressed: () {
-            //       context.read<AuthProvider>().signOut()
-            //     },
-            //     child: const Text(
-            //       "Logout",
-            //       style: TextStyle(
-            //         color: Colors.white,
-            //         fontFamily: "Poppins",
-            //         fontSize: 12,
-            //         fontStyle: FontStyle.normal,
-            //       ),
-            //     ))
+            TextButton(
+                onPressed: () async {
+                  await context.read<AuthProvider>().signOut();
+                },
+                child: const Text(
+                  "Logout",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "Poppins",
+                    fontSize: 12,
+                    fontStyle: FontStyle.normal,
+                  ),
+                ))
           ],
         ),
         body: const TopHeadlinesWidget());

@@ -8,7 +8,7 @@ import 'package:lingo_news/features/newsfeed/service/newsfeed_service.dart';
 class NewsfeedProvider with ChangeNotifier {
   final NewsfeedRepository _newsRepository;
   final FirebaseRemoteService _firebaseRemoteService;
-  String _countryCode = 'us';
+  String _countryCode = "";
 
   NewsfeedProvider(this._newsRepository, this._firebaseRemoteService)
       : _state = NewsfeedState(headlines: []) {
@@ -20,11 +20,28 @@ class NewsfeedProvider with ChangeNotifier {
   String get countryCode => _countryCode;
 
   Future<void> _initCountryCode() async {
-    _countryCode = await _firebaseRemoteService.fetchCountryCode();
-    fetchHeadlines();
+    _state = _state.copyWith(isLoading: true);
+    notifyListeners();
+
+    try {
+      _countryCode = await _firebaseRemoteService.fetchCountryCode();
+      await fetchHeadlines();
+    } catch (e) {
+      _state = _state.copyWith(
+          error: 'Failed to initialize country code: ${e.toString()}',
+          isLoading: false);
+      notifyListeners();
+    }
   }
 
   Future<void> fetchHeadlines() async {
+    if (_countryCode.isEmpty) {
+      _state = _state.copyWith(
+          error: 'Country code not initialized', isLoading: false);
+      notifyListeners();
+      return;
+    }
+
     _state = _state.copyWith(isLoading: true, error: null);
     notifyListeners();
 
@@ -38,7 +55,7 @@ class NewsfeedProvider with ChangeNotifier {
       }
     } catch (e) {
       _state = _state.copyWith(
-          error: 'An unexpected error occured: ${e.toString()}',
+          error: 'An unexpected error occurred: ${e.toString()}',
           isLoading: false);
     }
     notifyListeners();
