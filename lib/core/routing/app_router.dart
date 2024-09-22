@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lingo_news/features/authentication/controller/auth_provider.dart';
+import 'package:lingo_news/features/authentication/controller/authentication_controller.dart';
 import 'package:lingo_news/features/authentication/presentation/widgets/login_widget.dart';
 import 'package:lingo_news/features/authentication/presentation/widgets/signup_widget.dart';
 import 'package:lingo_news/features/home/presentation/homepage.dart';
@@ -11,43 +11,76 @@ class AppRouter {
 
   static GoRouter router(BuildContext context) {
     final authProvider =
-        Provider.of<AuthenticationProvider>(context, listen: false);
+        Provider.of<AuthenticationController>(context, listen: true);
+
     return GoRouter(
       debugLogDiagnostics: true,
       navigatorKey: rootNavigatorKey,
       refreshListenable: authProvider,
+      initialLocation: '/login',
       routes: [
         GoRoute(
           path: '/',
+          name: 'home',
           builder: (context, state) => const HomePage(),
         ),
         GoRoute(
           path: '/login',
+          name: 'login',
           builder: (context, state) => const LoginWidget(),
         ),
         GoRoute(
           path: '/register',
+          name: 'register',
           builder: (context, state) => const SignupWidget(),
         ),
       ],
-      redirect: (context, state) {
+      redirect: (BuildContext context, GoRouterState state) {
         final authProvider =
-            Provider.of<AuthenticationProvider>(context, listen: false);
+            Provider.of<AuthenticationController>(context, listen: false);
         final bool isLoggedIn = authProvider.state.user != null;
         final bool isLoading = authProvider.state.isLoading;
-        final bool isLoginRoute = state.matchedLocation == '/login';
-        final bool isRegisterRoute = state.matchedLocation == '/register';
+
+        final bool isGoingToLogin = state.matchedLocation == '/login';
+        final bool isGoingToRegister = state.matchedLocation == '/register';
 
         if (isLoading) return null;
-
-        if (!isLoggedIn && !isLoginRoute && !isRegisterRoute) {
-          return '/login';
-        } else if (isLoggedIn && (isLoginRoute || isRegisterRoute)) {
+        // If the user is logged in but still on auth page, send them to home
+        if (isLoggedIn && (isGoingToLogin || isGoingToRegister)) {
           return '/';
-        } else {
-          return null;
         }
+
+        // If the user is not logged in and not going to auth page, send them to login
+        if (!isLoggedIn && !isGoingToLogin && !isGoingToRegister) {
+          return '/login';
+        }
+
+        // No redirect
+        return null;
       },
+      errorBuilder: (context, state) => Scaffold(
+        body: Center(
+          child: Text('No route defined for ${state.matchedLocation}'),
+        ),
+      ),
     );
+  }
+}
+
+class AuthState extends ChangeNotifier {
+  final AuthenticationController _authController;
+
+  AuthState(this._authController) {
+    _authController.addListener(_onAuthStateChanged);
+  }
+
+  void _onAuthStateChanged() {
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _authController.removeListener(_onAuthStateChanged);
+    super.dispose();
   }
 }

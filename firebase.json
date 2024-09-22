@@ -1,1 +1,34 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"pingo-news-79309","appId":"1:563098071357:android:d3999ca7dfb5ef0136d554","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"pingo-news-79309","configurations":{"android":"1:563098071357:android:d3999ca7dfb5ef0136d554","web":"1:563098071357:web:edfd09c103aff78036d554"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "pingo-news-79309",
+          "appId": "1:563098071357:android:d3999ca7dfb5ef0136d554",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "pingo-news-79309",
+          "configurations": {
+            "android": "1:563098071357:android:d3999ca7dfb5ef0136d554",
+            "web": "1:563098071357:web:edfd09c103aff78036d554"
+          }
+        }
+      }
+    }
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}
