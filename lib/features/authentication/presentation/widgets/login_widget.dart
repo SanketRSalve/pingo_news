@@ -92,7 +92,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                             _emailController.text, _passwordController.text);
                       },
                       child: const Text(
-                        "Signup",
+                        "Login",
                         style: TextStyle(
                           color: Colors.white,
                         ),
