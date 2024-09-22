@@ -10,7 +10,8 @@ class AppRouter {
   static final rootNavigatorKey = GlobalKey<NavigatorState>();
 
   static GoRouter router(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     return GoRouter(
       debugLogDiagnostics: true,
       navigatorKey: rootNavigatorKey,
@@ -30,7 +31,8 @@ class AppRouter {
         ),
       ],
       redirect: (context, state) {
-        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final authProvider =
+            Provider.of<AuthenticationProvider>(context, listen: false);
         final bool isLoggedIn = authProvider.state.user != null;
         final bool isLoading = authProvider.state.isLoading;
         final bool isLoginRoute = state.matchedLocation == '/login';

@@ -37,7 +37,8 @@ class App extends StatelessWidget {
               return MultiProvider(
                 providers: [
                   ChangeNotifierProvider(
-                      create: (_) => AuthProvider(authService)..init()),
+                      create: (_) =>
+                          AuthenticationProvider(authService)..init()),
                   ChangeNotifierProvider(
                       create: (_) => NewsfeedProvider(
                           newsfeedRepository, firebaseRemoteService)),

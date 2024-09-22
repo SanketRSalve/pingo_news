@@ -85,7 +85,8 @@ class _SignupWidgetState extends State<SignupWidget> {
             const Spacer(flex: 3),
             Column(
               children: [
-                Consumer<AuthProvider>(builder: (context, authProvider, child) {
+                Consumer<AuthenticationProvider>(
+                    builder: (context, authProvider, child) {
                   return authProvider.state.isLoading
                       ? const Center(
                           child: CircularProgressIndicator.adaptive(),
@@ -97,7 +98,7 @@ class _SignupWidgetState extends State<SignupWidget> {
                               : () async {
                                   if (formKey.currentState!.validate()) {
                                     final success = await context
-                                        .read<AuthProvider>()
+                                        .read<AuthenticationProvider>()
                                         .registerUser(
                                             _nameController.text,
                                             _emailController.text,

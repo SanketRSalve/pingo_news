@@ -4,13 +4,13 @@ import 'package:lingo_news/features/authentication/models/auth_state.dart';
 import 'package:lingo_news/features/authentication/models/user_model.dart';
 import 'package:lingo_news/features/authentication/service/auth_service.dart';
 
-class AuthProvider with ChangeNotifier {
+class AuthenticationProvider with ChangeNotifier {
   final AuthService _authService;
 
   AuthState _state;
   AuthState get state => _state;
 
-  AuthProvider(this._authService)
+  AuthenticationProvider(this._authService)
       : _state = AuthState(user: null, isLoading: false, errorMessage: "");
 
   Future<void> init() async {

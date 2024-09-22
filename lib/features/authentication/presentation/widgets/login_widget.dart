@@ -84,7 +84,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
               Column(
                 children: [
-                  Consumer<AuthProvider>(
+                  Consumer<AuthenticationProvider>(
                       builder: (context, authProvider, child) {
                     return authProvider.state.isLoading
                         ? const Center(
@@ -97,7 +97,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 : () async {
                                     if (formKey.currentState!.validate()) {
                                       final success = await context
-                                          .read<AuthProvider>()
+                                          .read<AuthenticationProvider>()
                                           .loginUser(_emailController.text,
                                               _passwordController.text);
                                       if (success) {
