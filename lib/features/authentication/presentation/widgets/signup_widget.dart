@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lingo_news/core/theme/colors.dart';
+import 'package:lingo_news/core/utils/form_validators.dart';
 import 'package:lingo_news/features/authentication/controller/auth_provider.dart';
 import 'package:lingo_news/core/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
@@ -61,16 +62,19 @@ class _SignupWidgetState extends State<SignupWidget> {
                     CustomTextFormField(
                       textController: _nameController,
                       hintText: "Name",
+                      validator: FormValidators.validateName,
                     ),
                     const SizedBox(height: 22),
                     CustomTextFormField(
                       textController: _emailController,
                       hintText: "Email",
+                      validator: FormValidators.validateEmail,
                     ),
                     const SizedBox(height: 22),
                     CustomTextFormField(
                       textController: _passwordController,
                       hintText: "Password",
+                      validator: FormValidators.validatePassword,
                     ),
                   ],
                 ),
@@ -90,17 +94,20 @@ class _SignupWidgetState extends State<SignupWidget> {
                       backgroundColor: AppColors.primaryBlue,
                     ),
                     onPressed: () {
-                      debugPrint("Signup");
-                      debugPrint(_emailController.text);
-                      context.read<AuthProvider>().registerUser(
-                          _nameController.text,
-                          _emailController.text,
-                          _passwordController.text);
+                      if (formKey.currentState!.validate()) {
+                        context.read<AuthProvider>().registerUser(
+                            _nameController.text,
+                            _emailController.text,
+                            _passwordController.text);
+                      }
                     },
                     child: const Text(
                       "Signup",
                       style: TextStyle(
                         color: Colors.white,
+                        fontFamily: "Poppins",
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -116,7 +123,12 @@ class _SignupWidgetState extends State<SignupWidget> {
                       },
                       child: const Text(
                         "Login",
-                        style: TextStyle(color: AppColors.primaryBlue),
+                        style: TextStyle(
+                          color: AppColors.primaryBlue,
+                          fontFamily: "Poppins",
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],

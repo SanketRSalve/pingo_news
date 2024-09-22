@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lingo_news/core/theme/colors.dart';
+import 'package:lingo_news/core/utils/form_validators.dart';
 import 'package:lingo_news/features/authentication/controller/auth_provider.dart';
 import 'package:lingo_news/core/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -45,7 +47,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                 child: Text(
                   "MyNews",
                   style: TextStyle(
-                    fontSize: 24.0,
+                    fontFamily: 'Poppins',
+                    color: AppColors.primaryBlue,
+                    fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -54,17 +58,20 @@ class _LoginWidgetState extends State<LoginWidget> {
               const Spacer(flex: 2),
               Center(
                 child: Form(
+                  key: formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomTextFormField(
                         textController: _emailController,
                         hintText: "Email",
+                        validator: FormValidators.validateEmail,
                       ),
                       const SizedBox(height: 22),
                       CustomTextFormField(
                         textController: _passwordController,
                         hintText: "Password",
+                        validator: FormValidators.validatePassword,
                       ),
                     ],
                   ),
@@ -88,13 +95,18 @@ class _LoginWidgetState extends State<LoginWidget> {
                       onPressed: () {
                         debugPrint("Signup");
                         debugPrint(_emailController.text);
-                        context.read<AuthProvider>().loginUser(
-                            _emailController.text, _passwordController.text);
+                        if (formKey.currentState!.validate()) {
+                          context.read<AuthProvider>().loginUser(
+                              _emailController.text, _passwordController.text);
+                        }
                       },
                       child: const Text(
                         "Login",
                         style: TextStyle(
                           color: Colors.white,
+                          fontFamily: "Poppins",
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -110,7 +122,12 @@ class _LoginWidgetState extends State<LoginWidget> {
                         },
                         child: const Text(
                           "Signup",
-                          style: TextStyle(color: AppColors.primaryBlue),
+                          style: TextStyle(
+                            color: AppColors.primaryBlue,
+                            fontFamily: "Poppins",
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],

@@ -4,9 +4,9 @@ import 'package:lingo_news/core/routing/app_router.dart';
 import 'package:lingo_news/core/theme/app_theme.dart';
 import 'package:lingo_news/features/authentication/controller/auth_provider.dart';
 import 'package:lingo_news/features/authentication/service/auth_service.dart';
+import 'package:lingo_news/features/firebase_remote_service/firebase_remote_service.dart';
 import 'package:lingo_news/features/newsfeed/api/newsfeed_api.dart';
 import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
-import 'package:lingo_news/features/newsfeed/service/firebase_remote_service.dart';
 import 'package:lingo_news/features/newsfeed/service/newsfeed_service.dart';
 import 'package:lingo_news/firebase_options.dart';
 import 'package:provider/provider.dart';
@@ -16,11 +16,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {

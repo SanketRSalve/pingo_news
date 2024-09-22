@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_news/core/theme/app_sizes.dart';
 import 'package:lingo_news/core/theme/colors.dart';
-import 'package:lingo_news/core/utils/title_case_string_extenstion.dart';
 import 'package:lingo_news/features/home/presentation/widgets/top_headlines_widget.dart';
 import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +16,12 @@ class HomePage extends StatelessWidget {
           centerTitle: false,
           title: const Text(
             "MyNews",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+              color: AppColors.surfaceLight,
+              fontFamily: 'Poppins',
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           actions: [
             Padding(
@@ -33,8 +37,13 @@ class HomePage extends StatelessWidget {
                       builder: (context, newsfeedProvider, child) {
                     final countryCode = newsfeedProvider.countryCode;
                     return Text(
-                      countryCode.toTitleCase(),
-                      style: const TextStyle(color: Colors.white),
+                      countryCode.toUpperCase(),
+                      style: const TextStyle(
+                        color: AppColors.surfaceLight,
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     );
                   })
                 ],

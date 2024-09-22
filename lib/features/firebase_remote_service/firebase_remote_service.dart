@@ -7,8 +7,6 @@ class FirebaseRemoteService {
     try {
       await remoteConfig.fetchAndActivate();
       final code = remoteConfig.getString('country_code');
-      print("From firebase remote service");
-      print(code);
       return code;
     } catch (e) {
       return 'us';

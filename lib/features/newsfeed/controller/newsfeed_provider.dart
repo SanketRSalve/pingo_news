@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_news/core/utils/result_exception.dart';
+import 'package:lingo_news/features/firebase_remote_service/firebase_remote_service.dart';
 import 'package:lingo_news/features/newsfeed/models/article.dart';
 import 'package:lingo_news/features/newsfeed/models/newsfeed_state.dart';
-import 'package:lingo_news/features/newsfeed/service/firebase_remote_service.dart';
 import 'package:lingo_news/features/newsfeed/service/newsfeed_service.dart';
 
 class NewsfeedProvider with ChangeNotifier {
@@ -21,7 +21,6 @@ class NewsfeedProvider with ChangeNotifier {
 
   Future<void> _initCountryCode() async {
     _countryCode = await _firebaseRemoteService.fetchCountryCode();
-    print(_countryCode);
     fetchHeadlines();
   }
 

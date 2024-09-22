@@ -18,7 +18,6 @@ class ArticleListCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
@@ -26,15 +25,37 @@ class ArticleListCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(article.source.name),
+                Text(
+                  article.source.name,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Poppins',
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 gapH12,
                 Text(
                   article.description ?? "No Description",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Poppins',
+                    fontSize: 14,
+                    fontStyle: FontStyle.normal,
+                  ),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
                 gapH12,
-                Text(article.publishedAt.toTimeAgoLabel()),
+                Text(
+                  article.publishedAt.toTimeAgoLabel(),
+                  style: const TextStyle(
+                    color: AppColors.labelLight,
+                    fontFamily: 'Poppins',
+                    fontSize: 10,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
               ],
             ),
           ),
