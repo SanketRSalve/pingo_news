@@ -24,27 +24,54 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dioClient = DioClient();
-    final newsfeedRepository = NewsfeedRepository(dioClient);
-    final authService = AuthService();
-    final firebaseRemoteService = FirebaseRemoteService();
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (_) => AuthProvider(authService)..init()),
-        ChangeNotifierProvider(
-            create: (_) =>
-                NewsfeedProvider(newsfeedRepository, firebaseRemoteService)),
-      ],
-      child: Consumer(builder: (context, authProvider, child) {
-        return MaterialApp.router(
-          //Default Theme : Light
-          debugShowCheckedModeBanner: false,
-          routerConfig: AppRouter.router(context),
-          themeMode: ThemeMode.light,
-          theme: AppTheme.lightTheme,
-        );
-      }),
-    );
+    return FutureBuilder(
+        future: FirebaseRemoteService().fetchApiKey(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              final apiKey = snapshot.data!;
+              final dioClient = DioClient(apiKey: apiKey);
+              final firebaseRemoteService = FirebaseRemoteService();
+              final newsfeedRepository = NewsfeedRepository(dioClient);
+              final authService = AuthService();
+              return MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(
+                      create: (_) => AuthProvider(authService)..init()),
+                  ChangeNotifierProvider(
+                      create: (_) => NewsfeedProvider(
+                          newsfeedRepository, firebaseRemoteService)),
+                ],
+                child: Consumer(
+                  builder: (context, authProvider, child) {
+                    return MaterialApp.router(
+                      //Default Theme : Light
+                      debugShowCheckedModeBanner: false,
+                      routerConfig: AppRouter.router(context),
+                      themeMode: ThemeMode.light,
+                      theme: AppTheme.lightTheme,
+                    );
+                  },
+                ),
+              );
+            } else {
+              return MaterialApp(
+                home: Scaffold(
+                  body: Center(
+                    child: Text('Failed to initialize app: ${snapshot.error}'),
+                  ),
+                ),
+              );
+            }
+          } else {
+            return const MaterialApp(
+              home: Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            );
+          }
+        });
   }
 }
