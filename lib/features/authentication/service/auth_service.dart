@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:lingo_news/core/utils/result_exception.dart';
 import 'package:lingo_news/features/authentication/models/user_model.dart';
+import 'package:lingo_news/features/authentication/utils/firebase_exceptions.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -27,37 +28,42 @@ class AuthService {
   }
 
   // Register with email & password
-  Future<UserModel?> registerWithEmailAndPassword(
+  Future<Result<UserModel, Exception>> registerWithEmailAndPassword(
       String email, String password) async {
     try {
       final result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      return UserModel.fromFirebaseUser(result.user!);
+      return Success(UserModel.fromFirebaseUser(result.user!));
+    } on FirebaseAuthException catch (e) {
+      return Failure(Exception(handleAuthException(e)));
     } catch (e) {
-      debugPrint(e.toString());
-      return null;
+      return Failure(Exception('An unknown error occured'));
     }
   }
 
   // Login with email & password
-  Future<UserModel?> signInWithEmailAndPassword(
+  Future<Result<UserModel, Exception>> signInWithEmailAndPassword(
       String email, String password) async {
     try {
       final result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      return UserModel.fromFirebaseUser(result.user!);
+      return Success(UserModel.fromFirebaseUser(result.user!));
+    } on FirebaseAuthException catch (e) {
+      return Failure(Exception(handleAuthException(e)));
     } catch (e) {
-      debugPrint(e.toString());
-      return null;
+      return Failure(Exception('An Unknown error occured'));
     }
   }
 
   // signout user
-  Future<void> signOut() async {
+  Future<Result<void, Exception>> signOut() async {
     try {
-      return await _auth.signOut();
+      await _auth.signOut();
+      return const Success(null);
+    } on FirebaseAuthException catch (e) {
+      return Failure(Exception(handleAuthException(e)));
     } catch (e) {
-      debugPrint(e.toString());
+      return Failure(Exception('An Unknown error occured'));
     }
   }
 }

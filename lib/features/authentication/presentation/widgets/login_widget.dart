@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lingo_news/core/theme/colors.dart';
 import 'package:lingo_news/features/authentication/controller/auth_provider.dart';
-import 'package:lingo_news/widgets/custom_text_form_field.dart';
+import 'package:lingo_news/core/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
 
 class LoginWidget extends StatefulWidget {
