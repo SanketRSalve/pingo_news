@@ -18,7 +18,7 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      _authService.user.first.then((user) {
+      _authService.user.listen((user) {
         _state = _state.copyWith(user: user, isLoading: false);
       });
     } catch (e) {
@@ -85,21 +85,15 @@ class AuthProvider with ChangeNotifier {
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
     try {
-      final result = await _authService.signOut();
-      if (result is Success<void, Exception>) {
-        _state = _state.copyWith(user: null, isLoading: false);
-      } else if (result is Failure<void, Exception>) {
-        _state = _state.copyWith(
-          errorMessage: result.exception.toString(),
-          isLoading: false,
-        );
-      }
+      await _authService.signOut();
+      notifyListeners();
     } catch (e) {
       _state = _state.copyWith(
         errorMessage: e.toString(),
         isLoading: false,
       );
     } finally {
+      _state = _state.copyWith(isLoading: false);
       notifyListeners();
     }
   }

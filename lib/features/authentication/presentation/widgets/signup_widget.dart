@@ -94,12 +94,32 @@ class _SignupWidgetState extends State<SignupWidget> {
                           label: "Signup",
                           onPressed: authProvider.state.isLoading
                               ? null
-                              : () {
+                              : () async {
                                   if (formKey.currentState!.validate()) {
-                                    context.read<AuthProvider>().registerUser(
-                                        _nameController.text,
-                                        _emailController.text,
-                                        _passwordController.text);
+                                    final success = await context
+                                        .read<AuthProvider>()
+                                        .registerUser(
+                                            _nameController.text,
+                                            _emailController.text,
+                                            _passwordController.text);
+
+                                    if (success) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'Registration successful!')),
+                                      );
+                                    } else if (authProvider
+                                            .state.errorMessage !=
+                                        null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(authProvider
+                                                .state.errorMessage!)),
+                                      );
+                                    }
                                   }
                                 },
                         );

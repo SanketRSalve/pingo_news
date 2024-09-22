@@ -64,14 +64,11 @@ class AuthService {
   }
 
   // signout user
-  Future<Result<void, Exception>> signOut() async {
+  Future<void> signOut() async {
     try {
       await _auth.signOut();
-      return const Success(null);
-    } on FirebaseAuthException catch (e) {
-      return Failure(Exception(handleAuthException(e)));
-    } catch (e) {
-      return Failure(Exception('An Unknown error occured'));
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 }

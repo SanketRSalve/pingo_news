@@ -94,11 +94,29 @@ class _LoginWidgetState extends State<LoginWidget> {
                             label: "Login",
                             onPressed: authProvider.state.isLoading
                                 ? null
-                                : () {
+                                : () async {
                                     if (formKey.currentState!.validate()) {
-                                      context.read<AuthProvider>().loginUser(
-                                          _emailController.text,
-                                          _passwordController.text);
+                                      final success = await context
+                                          .read<AuthProvider>()
+                                          .loginUser(_emailController.text,
+                                              _passwordController.text);
+                                      if (success) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content:
+                                                  Text("Login Successful")),
+                                        );
+                                      } else if (authProvider
+                                              .state.errorMessage !=
+                                          null) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                              content: Text(authProvider
+                                                  .state.errorMessage!)),
+                                        );
+                                      }
                                     }
                                   });
                   }),
