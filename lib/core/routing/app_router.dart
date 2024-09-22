@@ -7,50 +7,45 @@ import 'package:lingo_news/features/home/presentation/homepage.dart';
 import 'package:provider/provider.dart';
 
 class AppRouter {
-  static final GoRouter router = GoRouter(
-    debugLogDiagnostics: true,
-    routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => Consumer<AuthProvider>(
-          builder: (context, authProvider, _) {
-            final authState = authProvider.state;
-            if (authState.isLoading) {
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
-            if (authState.user != null) {
-              return const HomePage();
-            }
-            return const LoginWidget();
-          },
-        ),
-      ),
-      GoRoute(
-        path: '/register',
-        builder: (context, state) => const SignupWidget(),
-      ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomePage(),
-      ),
-    ],
-    redirect: (BuildContext context, GoRouterState state) {
-      final bool loggedIn =
-          Provider.of<AuthProvider>(context, listen: false).state.user != null;
-      final bool isLoginRoute = state.matchedLocation == '/';
-      final bool isRegisterRoute = state.matchedLocation == '/register';
+  static final rootNavigatorKey = GlobalKey<NavigatorState>();
 
-      if (!loggedIn && !isLoginRoute && !isRegisterRoute) {
-        return '/';
-      } else if (loggedIn && (isLoginRoute || isRegisterRoute)) {
-        return '/home';
-      } else {
-        return null;
-      }
-    },
-  );
+  static GoRouter router(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    return GoRouter(
+      debugLogDiagnostics: true,
+      navigatorKey: rootNavigatorKey,
+      refreshListenable: authProvider,
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
+          path: '/login',
+          builder: (context, state) => const LoginWidget(),
+        ),
+        GoRoute(
+          path: '/register',
+          builder: (context, state) => const SignupWidget(),
+        ),
+      ],
+      redirect: (context, state) {
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final bool isLoggedIn = authProvider.state.user != null;
+        final bool isLoading = authProvider.state.isLoading;
+        final bool isLoginRoute = state.matchedLocation == '/login';
+        final bool isRegisterRoute = state.matchedLocation == '/register';
+
+        if (isLoading) return null;
+
+        if (!isLoggedIn && !isLoginRoute && !isRegisterRoute) {
+          return '/login';
+        } else if (isLoggedIn && (isLoginRoute || isRegisterRoute)) {
+          return '/';
+        } else {
+          return null;
+        }
+      },
+    );
+  }
 }

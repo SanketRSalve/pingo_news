@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lingo_news/app_sizes.dart';
+import 'package:lingo_news/core/theme/app_sizes.dart';
 import 'package:lingo_news/core/theme/colors.dart';
+import 'package:lingo_news/core/utils/title_case_string_extenstion.dart';
 import 'package:lingo_news/features/home/presentation/widgets/top_headlines_widget.dart';
-
+import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -17,20 +19,24 @@ class HomePage extends StatelessWidget {
             "MyNews",
             style: TextStyle(color: Colors.white),
           ),
-          actions: const [
+          actions: [
             Padding(
-              padding: EdgeInsets.only(right: 16.0),
+              padding: const EdgeInsets.only(right: 16.0),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.near_me_rounded,
                     color: Colors.white,
                   ),
                   gapW8,
-                  Text(
-                    "In",
-                    style: TextStyle(color: Colors.white),
-                  )
+                  Consumer<NewsfeedProvider>(
+                      builder: (context, newsfeedProvider, child) {
+                    final countryCode = newsfeedProvider.countryCode;
+                    return Text(
+                      countryCode.toTitleCase(),
+                      style: const TextStyle(color: Colors.white),
+                    );
+                  })
                 ],
               ),
             )

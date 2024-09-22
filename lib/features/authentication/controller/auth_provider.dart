@@ -48,12 +48,12 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
-  Future<bool> registerUser(String email, String password) async {
+  Future<bool> registerUser(String name, String email, String password) async {
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
 
     final result =
-        await _authService.registerWithEmailAndPassword(email, password);
+        await _authService.registerWithEmailAndPassword(name, email, password);
     if (result is Success<UserModel, Exception>) {
       _state = _state.copyWith(user: result.value, isLoading: false);
       notifyListeners();

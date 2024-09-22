@@ -6,6 +6,7 @@ import 'package:lingo_news/features/authentication/controller/auth_provider.dart
 import 'package:lingo_news/features/authentication/service/auth_service.dart';
 import 'package:lingo_news/features/newsfeed/api/newsfeed_api.dart';
 import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
+import 'package:lingo_news/features/newsfeed/service/firebase_remote_service.dart';
 import 'package:lingo_news/features/newsfeed/service/newsfeed_service.dart';
 import 'package:lingo_news/firebase_options.dart';
 import 'package:provider/provider.dart';
@@ -26,18 +27,24 @@ class MyApp extends StatelessWidget {
     final dioClient = DioClient();
     final newsfeedRepository = NewsfeedRepository(dioClient);
     final authService = AuthService();
+    final firebaseRemoteService = FirebaseRemoteService();
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider(authService)),
         ChangeNotifierProvider(
-            create: (_) => NewsfeedProvider(newsfeedRepository))
+            create: (_) => AuthProvider(authService)..init()),
+        ChangeNotifierProvider(
+            create: (_) =>
+                NewsfeedProvider(newsfeedRepository, firebaseRemoteService)),
       ],
-      child: MaterialApp.router(
-        //Default Theme : Light
-        routerConfig: AppRouter.router,
-        themeMode: ThemeMode.light,
-        theme: AppTheme.lightTheme,
-      ),
+      child: Consumer(builder: (context, authProvider, child) {
+        return MaterialApp.router(
+          //Default Theme : Light
+          debugShowCheckedModeBanner: false,
+          routerConfig: AppRouter.router(context),
+          themeMode: ThemeMode.light,
+          theme: AppTheme.lightTheme,
+        );
+      }),
     );
   }
 }

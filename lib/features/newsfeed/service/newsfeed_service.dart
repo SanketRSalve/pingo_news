@@ -1,6 +1,5 @@
-//API
-
 import 'package:dio/dio.dart';
+import 'package:lingo_news/core/utils/result_exception.dart';
 import 'package:lingo_news/features/newsfeed/api/newsfeed_api.dart';
 import 'package:lingo_news/features/newsfeed/models/article.dart';
 
@@ -10,20 +9,28 @@ class NewsfeedRepository {
   NewsfeedRepository(this._dioClient);
 
   // Fetch headlines
-  Future<List<Article>> fetchTopHeadlines() async {
+  Future<Result<List<Article>, Exception>> fetchTopHeadlines(
+      String countryCode) async {
+    print(countryCode);
     final dio = _dioClient.dio;
+
     try {
       Response response = await dio.get('/top-headlines', queryParameters: {
-        //TODO: make use of remote cofig to change this later
-        'country': 'us',
+        'country': countryCode,
       });
-      List<dynamic> articlesJson = response.data['articles'];
-      List<Article> articles =
-          articlesJson.map((json) => Article.fromJson(json)).toList();
-      print(response);
-      return articles;
-    } catch (e) {
-      rethrow;
+      // Response response = await Dio().get('http://127.0.0.1:5500/test.json');
+      if (response.statusCode == 200) {
+        List<dynamic> articlesjson = response.data['articles'];
+        List<Article> articles =
+            articlesjson.map((json) => Article.fromJson(json)).toList();
+        return Success(articles);
+      } else {
+        return Failure(Exception(response.statusMessage));
+      }
+    } on DioException catch (e) {
+      return Failure(Exception('Network error: ${e.message}'));
+    } on Exception catch (e) {
+      return Failure(e);
     }
   }
 }

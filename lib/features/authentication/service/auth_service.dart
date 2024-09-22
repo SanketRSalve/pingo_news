@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingo_news/core/utils/result_exception.dart';
 import 'package:lingo_news/features/authentication/models/user_model.dart';
@@ -5,6 +6,7 @@ import 'package:lingo_news/features/authentication/utils/firebase_exceptions.dar
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Stream to get authentication state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -29,10 +31,16 @@ class AuthService {
 
   // Register with email & password
   Future<Result<UserModel, Exception>> registerWithEmailAndPassword(
-      String email, String password) async {
+      String name, String email, String password) async {
     try {
+      //create user
       final result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      //store user name
+      await _firestore.collection('user').doc(result.user!.uid).set({
+        'username': name,
+      });
+
       return Success(UserModel.fromFirebaseUser(result.user!));
     } on FirebaseAuthException catch (e) {
       return Failure(Exception(handleAuthException(e)));

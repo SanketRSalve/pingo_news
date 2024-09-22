@@ -93,7 +93,9 @@ class _SignupWidgetState extends State<SignupWidget> {
                       debugPrint("Signup");
                       debugPrint(_emailController.text);
                       context.read<AuthProvider>().registerUser(
-                          _emailController.text, _passwordController.text);
+                          _nameController.text,
+                          _emailController.text,
+                          _passwordController.text);
                     },
                     child: const Text(
                       "Signup",
