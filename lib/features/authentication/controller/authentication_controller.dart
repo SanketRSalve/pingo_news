@@ -36,6 +36,8 @@ class AuthenticationController extends ChangeNotifier {
       debugPrint(e.toString());
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(handleAuthException(e as FirebaseAuthException))));
+                      _state = _state.copyWith(user: null, isLoading: false);
+      notifyListeners();
     }
   }
 
@@ -52,6 +54,8 @@ class AuthenticationController extends ChangeNotifier {
       debugPrint(e.toString());
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(handleAuthException(e as FirebaseAuthException))));
+            _state = _state.copyWith(user: null, isLoading: false);
+      notifyListeners();
     }
   }
 
@@ -66,6 +70,8 @@ class AuthenticationController extends ChangeNotifier {
       debugPrint(e.toString());
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(handleAuthException(e as FirebaseAuthException))));
+                      _state = _state.copyWith(user: null, isLoading: false);
+      notifyListeners();
     }
   }
 }

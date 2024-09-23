@@ -19,15 +19,15 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  if (kDebugMode) {
-    // Use local Firebase emulators if in DEBUG mode.
-    try {
-      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
+  // if (kDebugMode) {
+  //   // Use local Firebase emulators if in DEBUG mode.
+  //   try {
+  //     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  //     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //   }
+  // }
   runApp(const App());
 }
 
