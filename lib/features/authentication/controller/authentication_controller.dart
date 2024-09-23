@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:lingo_news/features/authentication/models/authetication_state.dart';
 import 'package:lingo_news/features/authentication/models/user_model.dart';
 import 'package:lingo_news/features/authentication/service/authentication_service.dart';
+import 'package:lingo_news/features/authentication/utils/firebase_exceptions.dart';
 
 class AuthenticationController extends ChangeNotifier {
   final AuthenticationService _authService = AuthenticationService();
@@ -23,7 +24,7 @@ class AuthenticationController extends ChangeNotifier {
   }
 
   Future<void> registerWithEmailAndPassword(
-      String name, String email, String password) async {
+      String name, String email, String password, BuildContext context) async {
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
     try {
@@ -33,10 +34,13 @@ class AuthenticationController extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(handleAuthException(e as FirebaseAuthException))));
     }
   }
 
-  Future<void> loginWithEmailAndPassword(String email, String password) async {
+  Future<void> loginWithEmailAndPassword(
+      String email, String password, BuildContext context) async {
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
     try {
@@ -46,10 +50,12 @@ class AuthenticationController extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(handleAuthException(e as FirebaseAuthException))));
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut(BuildContext context) async {
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
     try {
@@ -58,7 +64,8 @@ class AuthenticationController extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
-      notifyListeners();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(handleAuthException(e as FirebaseAuthException))));
     }
   }
 }

@@ -100,7 +100,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                                           .read<AuthenticationController>()
                                           .loginWithEmailAndPassword(
                                               _emailController.text,
-                                              _passwordController.text);
+                                              _passwordController.text,
+                                              context);
                                     }
                                   });
                   }),

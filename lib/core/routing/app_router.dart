@@ -11,7 +11,7 @@ class AppRouter {
 
   static GoRouter router(BuildContext context) {
     final authProvider =
-        Provider.of<AuthenticationController>(context, listen: true);
+        Provider.of<AuthenticationController>(context, listen: false);
 
     return GoRouter(
       debugLogDiagnostics: true,
@@ -45,17 +45,12 @@ class AppRouter {
         final bool isGoingToRegister = state.matchedLocation == '/register';
 
         if (isLoading) return null;
-        // If the user is logged in but still on auth page, send them to home
         if (isLoggedIn && (isGoingToLogin || isGoingToRegister)) {
           return '/';
         }
-
-        // If the user is not logged in and not going to auth page, send them to login
         if (!isLoggedIn && !isGoingToLogin && !isGoingToRegister) {
           return '/login';
         }
-
-        // No redirect
         return null;
       },
       errorBuilder: (context, state) => Scaffold(

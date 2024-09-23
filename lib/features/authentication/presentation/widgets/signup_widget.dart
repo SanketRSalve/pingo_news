@@ -48,7 +48,9 @@ class _SignupWidgetState extends State<SignupWidget> {
               child: Text(
                 "MyNews",
                 style: TextStyle(
-                  fontSize: 24.0,
+                  fontFamily: 'Poppins',
+                  color: AppColors.primaryBlue,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -102,7 +104,8 @@ class _SignupWidgetState extends State<SignupWidget> {
                                         .registerWithEmailAndPassword(
                                             _nameController.text,
                                             _emailController.text,
-                                            _passwordController.text);
+                                            _passwordController.text,
+                                            context);
                                   }
                                 },
                         );

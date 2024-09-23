@@ -55,7 +55,9 @@ class HomePage extends StatelessWidget {
             //Can Add Logout button if asked
             TextButton(
                 onPressed: () async {
-                  await context.read<AuthenticationController>().signOut();
+                  await context
+                      .read<AuthenticationController>()
+                      .signOut(context);
                 },
                 child: const Text(
                   "Logout",
