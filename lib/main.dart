@@ -8,8 +8,9 @@ import 'package:lingo_news/core/theme/app_theme.dart';
 import 'package:lingo_news/features/authentication/controller/authentication_controller.dart';
 import 'package:lingo_news/core/firebase_remote_service/firebase_remote_service.dart';
 import 'package:lingo_news/features/newsfeed/api/newsfeed_api.dart';
-import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
-import 'package:lingo_news/features/newsfeed/service/newsfeed_service.dart';
+import 'package:lingo_news/features/newsfeed/controller/news_controller.dart';
+import 'package:lingo_news/features/newsfeed/respositories/news_repository.dart';
+import 'package:lingo_news/features/newsfeed/service/news_service.dart';
 import 'package:lingo_news/firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -43,14 +44,15 @@ class App extends StatelessWidget {
               final apiKey = snapshot.data!;
               final dioClient = DioClient(apiKey: apiKey);
               final firebaseRemoteService = FirebaseRemoteService();
-              final newsfeedRepository = NewsfeedRepository(dioClient);
+              final newsRepository = NewsRepository(dioClient: dioClient);
+              final newsService = NewsService(newsRepository: newsRepository);
               return MultiProvider(
                 providers: [
                   ChangeNotifierProvider(
                       create: (_) => AuthenticationController()..initialize()),
                   ChangeNotifierProvider(
-                      create: (_) => NewsfeedProvider(
-                          newsfeedRepository, firebaseRemoteService)),
+                      create: (_) =>
+                          NewsController(newsService, firebaseRemoteService)),
                 ],
                 child: Consumer(
                   builder: (context, authProvider, child) {

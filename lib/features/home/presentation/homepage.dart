@@ -4,7 +4,7 @@ import 'package:lingo_news/core/theme/app_sizes.dart';
 import 'package:lingo_news/core/theme/colors.dart';
 import 'package:lingo_news/features/authentication/controller/authentication_controller.dart';
 import 'package:lingo_news/features/home/presentation/widgets/top_headlines_widget.dart';
-import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
+import 'package:lingo_news/features/newsfeed/controller/news_controller.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
                     color: Colors.white,
                   ),
                   gapW8,
-                  Consumer<NewsfeedProvider>(
+                  Consumer<NewsController>(
                       builder: (context, newsfeedProvider, child) {
                     final countryCode = newsfeedProvider.countryCode;
                     return Text(
@@ -56,7 +56,6 @@ class HomePage extends StatelessWidget {
             TextButton(
                 onPressed: () async {
                   await context.read<AuthenticationController>().signOut();
-                  context.goNamed('login');
                 },
                 child: const Text(
                   "Logout",
