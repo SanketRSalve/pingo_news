@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lingo_news/core/theme/colors.dart';
 import 'package:lingo_news/core/utils/form_validators.dart';
-import 'package:lingo_news/features/authentication/controller/auth_provider.dart';
 import 'package:lingo_news/core/widgets/custom_text_form_field.dart';
+import 'package:lingo_news/features/authentication/controller/authentication_controller.dart';
 import 'package:lingo_news/features/authentication/presentation/widgets/primary_button.dart';
 import 'package:provider/provider.dart';
 
@@ -84,7 +84,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
               Column(
                 children: [
-                  Consumer<AuthenticationProvider>(
+                  Consumer<AuthenticationController>(
                       builder: (context, authProvider, child) {
                     return authProvider.state.isLoading
                         ? const Center(
@@ -96,27 +96,12 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 ? null
                                 : () async {
                                     if (formKey.currentState!.validate()) {
-                                      final success = await context
-                                          .read<AuthenticationProvider>()
-                                          .loginUser(_emailController.text,
-                                              _passwordController.text);
-                                      if (success) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                              content:
-                                                  Text("Login Successful")),
-                                        );
-                                      } else if (authProvider
-                                              .state.errorMessage !=
-                                          null) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content: Text(authProvider
-                                                  .state.errorMessage!)),
-                                        );
-                                      }
+                                      await context
+                                          .read<AuthenticationController>()
+                                          .loginWithEmailAndPassword(
+                                              _emailController.text,
+                                              _passwordController.text,
+                                              context);
                                     }
                                   });
                   }),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_news/features/home/presentation/widgets/article_list_card.dart';
-import 'package:lingo_news/features/newsfeed/controller/newsfeed_provider.dart';
+import 'package:lingo_news/features/newsfeed/controller/news_controller.dart';
 import 'package:lingo_news/features/newsfeed/models/article.dart';
 import 'package:provider/provider.dart';
 
@@ -11,12 +11,12 @@ class TopHeadlinesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<NewsfeedProvider>().refreshHeadlines();
+        context.read<NewsController>().refreshHeadlines();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 22.0),
         child:
-            Consumer<NewsfeedProvider>(builder: (context, newsProvider, child) {
+            Consumer<NewsController>(builder: (context, newsProvider, child) {
           final state = newsProvider.state;
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator.adaptive());
