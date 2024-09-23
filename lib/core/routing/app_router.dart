@@ -61,21 +61,3 @@ class AppRouter {
     );
   }
 }
-
-class AuthState extends ChangeNotifier {
-  final AuthenticationController _authController;
-
-  AuthState(this._authController) {
-    _authController.addListener(_onAuthStateChanged);
-  }
-
-  void _onAuthStateChanged() {
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _authController.removeListener(_onAuthStateChanged);
-    super.dispose();
-  }
-}
