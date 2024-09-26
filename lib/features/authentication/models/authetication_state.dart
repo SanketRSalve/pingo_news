@@ -8,7 +8,7 @@ class AuthenticationState {
 
   AuthenticationState copyWith({UserModel? user, bool? isLoading}) {
     return AuthenticationState(
-      user: user ?? this.user,
+      user: user,
       isLoading: isLoading ?? this.isLoading,
     );
   }

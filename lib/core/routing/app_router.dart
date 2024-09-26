@@ -11,46 +11,63 @@ class AppRouter {
 
   static GoRouter router(BuildContext context) {
     final authProvider =
-        Provider.of<AuthenticationController>(context, listen: false);
+        Provider.of<AuthenticationController>(context, listen: true);
 
     return GoRouter(
       debugLogDiagnostics: true,
       navigatorKey: rootNavigatorKey,
-      refreshListenable: authProvider,
-      initialLocation: '/login',
+      initialLocation: '/',
       routes: [
         GoRoute(
           path: '/',
-          name: 'home',
-          builder: (context, state) => const HomePage(),
-        ),
-        GoRoute(
-          path: '/login',
-          name: 'login',
-          builder: (context, state) => const LoginWidget(),
-        ),
-        GoRoute(
-          path: '/register',
-          name: 'register',
-          builder: (context, state) => const SignupWidget(),
+          name: 'root',
+          builder: (context, state) {
+            return const LoginWidget();
+          },
+          routes: [
+            GoRoute(
+              path: 'home',
+              name: 'home',
+              builder: (context, state) {
+                return const HomePage();
+              },
+            ),
+            GoRoute(
+              path: 'login',
+              name: 'login',
+              builder: (context, state) {
+                return const LoginWidget();
+              },
+            ),
+            GoRoute(
+              path: 'register',
+              name: 'register',
+              builder: (context, state) {
+                return const SignupWidget();
+              },
+            ),
+          ],
         ),
       ],
       redirect: (BuildContext context, GoRouterState state) {
-        final authProvider =
-            Provider.of<AuthenticationController>(context, listen: false);
-        final bool isLoggedIn = authProvider.state.user != null;
-        final bool isLoading = authProvider.state.isLoading;
+        final isLoggedIn = authProvider.state.user != null;
+        final isLoading = authProvider.state.isLoading;
 
-        final bool isGoingToLogin = state.matchedLocation == '/login';
-        final bool isGoingToRegister = state.matchedLocation == '/register';
-
-        if (isLoading) return null;
-        if (isLoggedIn && (isGoingToLogin || isGoingToRegister)) {
-          return '/';
+        if (isLoading) {
+          return null;
         }
-        if (!isLoggedIn && !isGoingToLogin && !isGoingToRegister) {
+
+        final isAuthPage = state.matchedLocation == '/' ||
+            state.matchedLocation == '/login' ||
+            state.matchedLocation == '/register';
+
+        if (isLoggedIn && isAuthPage) {
+          return '/home';
+        }
+        if (!isLoggedIn && !isAuthPage) {
           return '/login';
         }
+
         return null;
       },
       errorBuilder: (context, state) => Scaffold(

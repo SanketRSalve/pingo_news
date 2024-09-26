@@ -10,14 +10,16 @@ abstract class AuthenticationRepositoryProto {
 }
 
 class AuthenticationRepository implements AuthenticationRepositoryProto {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  AuthenticationRepository({required this.firestore, required this.auth});
+
+  final FirebaseAuth auth;
+  final FirebaseFirestore firestore;
 
   @override
   Future<UserCredential> loginWithEmailAndPassword(
       String email, String password) async {
     try {
-      final userCredential = await _auth.signInWithEmailAndPassword(
+      final userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       return userCredential;
     } on FirebaseAuthException catch (_) {
@@ -29,9 +31,9 @@ class AuthenticationRepository implements AuthenticationRepositoryProto {
   Future<UserCredential> registerWithEmailAndPassword(
       String name, String email, String password) async {
     try {
-      final userCredential = await _auth.createUserWithEmailAndPassword(
+      final userCredential = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      await _firestore.collection('user').doc(userCredential.user!.uid).set({
+      await firestore.collection('user').doc(userCredential.user!.uid).set({
         'username': name,
       });
       return userCredential;
@@ -42,6 +44,14 @@ class AuthenticationRepository implements AuthenticationRepositoryProto {
 
   @override
   Future<void> signOut() async {
-    await _auth.signOut();
+    await auth.signOut();
+  }
+
+  Future<User?> getCurrentUser() async {
+    User? user = auth.currentUser;
+    if (user != null) {
+      return user;
+    }
+    return null;
   }
 }

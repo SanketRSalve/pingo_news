@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lingo_news/core/theme/app_sizes.dart';
 import 'package:lingo_news/core/theme/colors.dart';
 import 'package:lingo_news/features/authentication/controller/authentication_controller.dart';
@@ -14,6 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: AppColors.primaryBlue,
           centerTitle: false,
           title: const Text(

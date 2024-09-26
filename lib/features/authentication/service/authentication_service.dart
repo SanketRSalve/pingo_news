@@ -6,17 +6,19 @@ abstract class AuthenticationServiceProto {
       String name, String email, String password);
   Future<UserModel> loginWithEmailAndPassword(String email, String password);
   Future<void> signOut();
+  Future<UserModel?> getCurrentUser();
 }
 
 class AuthenticationService implements AuthenticationServiceProto {
-  final AuthenticationRepository _authRepo = AuthenticationRepository();
+  AuthenticationService({required this.authRepository});
+  final AuthenticationRepository authRepository;
 
   @override
   Future<UserModel> loginWithEmailAndPassword(
       String email, String password) async {
     try {
       final userCredential =
-          await _authRepo.loginWithEmailAndPassword(email, password);
+          await authRepository.loginWithEmailAndPassword(email, password);
       return UserModel.fromFirebaseUser(userCredential.user!);
     } catch (_) {
       rethrow;
@@ -27,8 +29,8 @@ class AuthenticationService implements AuthenticationServiceProto {
   Future<UserModel> registerWithEmailAndPassword(
       String name, String email, String password) async {
     try {
-      final userCredential =
-          await _authRepo.registerWithEmailAndPassword(name, email, password);
+      final userCredential = await authRepository.registerWithEmailAndPassword(
+          name, email, password);
       return UserModel.fromFirebaseUser(userCredential.user!);
     } catch (_) {
       rethrow;
@@ -37,10 +39,16 @@ class AuthenticationService implements AuthenticationServiceProto {
 
   @override
   Future<void> signOut() async {
-    try {
-      await _authRepo.signOut();
-    } catch (e) {
-      rethrow;
+    authRepository.signOut();
+  }
+
+  @override
+  Future<UserModel?> getCurrentUser() async {
+    final user = await authRepository.getCurrentUser();
+    if (user != null) {
+      return UserModel.fromFirebaseUser(user);
+    } else {
+      return null;
     }
   }
 }
